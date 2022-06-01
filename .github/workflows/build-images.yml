@@ -1,0 +1,16 @@
+name: GA test
+on:
+  pull_request:
+    types:
+    - closed
+    branches:
+    - 'main'
+    - 'dev'
+
+jobs:
+  Test-Job:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Test
+        if: ${{ github.event.pull_request.merged == true }}
+        run: echo Successful test on ${{ github.ref_name }} !
