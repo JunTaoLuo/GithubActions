@@ -13,4 +13,4 @@ jobs:
     steps:
       - name: Test
         if: ${{ github.event.pull_request.merged == true }}
-        run: echo Success on ${{ github.ref_name }} !
+        run: echo Successful test on ${{ github.ref_name }} !
