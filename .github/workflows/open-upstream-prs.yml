@@ -19,8 +19,8 @@ jobs:
       - name: Resolve diff
         id: status
         run: |
-          git fetch ${{ github.base_ref }} && \
-          git fetch ${{ github.head_ref }} && \
+          git fetch origin ${{ github.base_ref }} && \
+          git fetch origin ${{ github.head_ref }} && \
           echo ::set-output name=subdir_files_modified::$(git diff --dirstat=files,0 ${{ github.base_ref }}..${{ github.head_ref }} | grep " ${{ matrix.subdir }}/$" | wc -l)
       - name: Push branch
         if: steps.status.outputs.subdir_files_modified > 0
