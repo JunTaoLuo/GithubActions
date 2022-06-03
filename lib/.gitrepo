@@ -4,7 +4,7 @@
 ; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
 ;
 [subrepo]
-	remote = git@github.com:juntaoluo/GithubAction-Subrepo
+	remote = https://github.com/JunTaoLuo/GithubAction-Subrepo.git
 	branch = main
 	commit = 4c306452cae309d3241df77fa031ca97cb9b4233
 	parent = 9d9f4248e49dd0ccdb79c37c67278cd27de5e768
