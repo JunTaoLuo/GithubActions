@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/JunTaoLuo/GithubAction-Subrepo.git
+	branch = dev
+	commit = 620103f316457abe914b26c818d60f6aa7217ff2
+	parent = dd8b2f849784fb85131b2fea60301bebfbcf2396
+	method = rebase
+	cmdver = 0.4.3

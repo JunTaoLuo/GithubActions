@@ -1,0 +1,47 @@
+name: Testing
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Update branch"
+        type: choice
+        required: true
+        options:
+        - 'main'
+        - 'dev'
+  push:
+    branches:
+    - 'main'
+    - 'dev'
+
+jobs:
+  Test-Job:
+    strategy:
+      matrix:
+        repo: ['juntaoluo/GithubActions']
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Dispatch update
+        if: github.event_name == 'workflow_dispatch'
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          repository: ${{ matrix.repo }}
+          event-type: update-subrepo-event
+          client-payload: |
+            {
+              "source": "GithubAction-Subrepo",
+              "branch": "${{ github.event.inputs.branch }}"
+            }
+      - name: Dispatch update
+        if: github.event_name == 'push'
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          repository: ${{ matrix.repo }}
+          event-type: update-subrepo-event
+          client-payload: |
+            {
+              "source": "GithubAction-Subrepo",
+              "branch": "${{ github.ref_name }}"
+            }
