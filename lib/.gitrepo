@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:juntaoluo/GithubAction-Subrepo
+	branch = main
+	commit = 5428c7c74a5f9e00932ff2be85eb4d862d18bec3
+	parent = d6ba64fbedf1a0d6037cf2f9045f54f986b039c8
+	method = merge
+	cmdver = 0.4.3
