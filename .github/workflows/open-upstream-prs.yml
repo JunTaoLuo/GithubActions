@@ -15,11 +15,12 @@ jobs:
       - uses: actions/checkout@v3
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
+          ref: ${{ github.head_ref }}
           fetch-depth: 0
       - name: Resolve diff
         id: status
         run: |
-          echo ::set-output name=subdir_files_modified::$(git diff --dirstat=files,0 origin/${{ github.base_ref }}..origin/${{ github.head_ref }} | grep " ${{ matrix.subdir }}/$" | wc -l)
+          echo ::set-output name=subdir_files_modified::$(git diff --dirstat=files,0 origin/${{ github.base_ref }}..${{ github.head_ref }} | grep " ${{ matrix.subdir }}/$" | wc -l)
       - name: Push branch
         if: steps.status.outputs.subdir_files_modified > 0
         id: subrepo
