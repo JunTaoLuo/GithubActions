@@ -9,19 +9,33 @@ jobs:
   Test-Job:
     strategy:
       matrix:
-        repo: ['lib']
+        subdir: ['lib']
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           depth: 0
-      - name: Pull update
+      - name: Resolve diff
+        id: status
+        run: |
+          echo ::set-output name=subdir_files_modified::$(git diff --dirstat=files,0 ${{ github.base_ref }}..${{ github.ref_name }} | grep "  ${{ matrix.subdir }}/$" | wc -l)
+      - name: Push branch
+        if: steps.status.outputs.subdir_files_modified > 0
+        id: subrepo
         run: |
           export GITHUB_TOKEN=${{ secrets.ACCESS_TOKEN }} && \
           git config --global user.name ${{ github.actor }} && \
           git config --global user.email "${{ github.actor }}@users.noreply.github.com" && \
-          git diff --name-status ${{ github.base_ref }}..${{ github.ref_name }}
-          git subrepo pull lib -b ${{ github.event.client_payload.branch }}
-      - name: Test
-        run: python test.py
+          git subrepo push ${{ matrix.subdir }} -b ${{ github.ref_name }}
+      - name: Dispatch PR
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          repository: juntaoluo/GithubAction-Subrepo
+          event-type: update-pr
+          client-payload: |
+            {
+              "base": "${{ github.base_ref }}"
+              "branch": "${{ github.ref_name }}"
+            }
