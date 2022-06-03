@@ -6,7 +6,7 @@ on:
     - 'dev'
 
 jobs:
-  Test-Job:
+  Upstream-PR:
     strategy:
       matrix:
         subdir: ['lib']
@@ -19,7 +19,7 @@ jobs:
       - name: Resolve diff
         id: status
         run: |
-          echo ::set-output name=subdir_files_modified::$(git diff --dirstat=files,0 ${{ github.base_ref }}..${{ github.ref_name }} | grep "  ${{ matrix.subdir }}/$" | wc -l)
+          echo ::set-output name=subdir_files_modified::$(git diff --dirstat=files,0 ${{ github.base_ref }}..${{ github.head_ref }} | grep " ${{ matrix.subdir }}/$" | wc -l)
       - name: Push branch
         if: steps.status.outputs.subdir_files_modified > 0
         id: subrepo
@@ -29,6 +29,7 @@ jobs:
           git config --global user.email "${{ github.actor }}@users.noreply.github.com" && \
           git subrepo push ${{ matrix.subdir }} -b ${{ github.ref_name }}
       - name: Dispatch PR
+        if: steps.status.outputs.subdir_files_modified > 0
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
