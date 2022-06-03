@@ -8,10 +8,8 @@ jobs:
     steps:
       - name: Install Subrepo
         run: |
-          git clone --depth=1 --branch=0.4.3 https://github.com/ingydotnet/git-subrepo.git /tmp/git-subrepo \
-          && cd /tmp/git-subrepo \
-          && make install \
-          && rm -rf /tmp/git-subrepo
+          git clone --depth=1 --branch=0.4.3 https://github.com/ingydotnet/git-subrepo.git /tmp/git-subrepo && \
+          source /tmp/git-subrepo/.rc
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.client_payload.branch }}
