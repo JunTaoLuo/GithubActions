@@ -1,0 +1,27 @@
+name: Testing
+on:
+  pull_request:
+    branches:
+    - 'main'
+    - 'dev'
+
+jobs:
+  Test-Job:
+    strategy:
+      matrix:
+        repo: ['lib']
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          depth: 0
+      - name: Pull update
+        run: |
+          export GITHUB_TOKEN=${{ secrets.ACCESS_TOKEN }} && \
+          git config --global user.name ${{ github.actor }} && \
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com" && \
+          git diff --name-status ${{ github.base_ref }}..${{ github.ref_name }}
+          git subrepo pull lib -b ${{ github.event.client_payload.branch }}
+      - name: Test
+        run: python test.py
