@@ -14,6 +14,8 @@ jobs:
       - name: Pull update
         run: |
           export GITHUB_TOKEN=${{ secrets.ACCESS_TOKEN }} && \
+          git config --global user.name ${{ github.actor }} && \
+          git config --global user.email "${{ github.actor }}@example.com" && \
           git clone --depth=1 --branch=0.4.3 https://github.com/ingydotnet/git-subrepo.git /tmp/git-subrepo && \
           source /tmp/git-subrepo/.rc && \
           echo "client branch: ${{ github.event.client_payload.branch }}" && \
