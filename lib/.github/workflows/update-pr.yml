@@ -11,9 +11,10 @@ jobs:
           ref: ${{ github.event.client_payload.branch }}
           token: ${{ secrets.ACCESS_TOKEN }}
           fetch-depth: 0
-      - name: Create PR
-        uses: peter-evans/create-pull-request@v4
-        with:
-          token: ${{ secrets.ACCESS_TOKEN }}
-          branch: ${{ github.event.client_payload.branch }}
-          base: ${{ github.event.client_payload.base }}
+      - run: echo "merge ${{ github.event.client_payload.branch }} into ${{ github.event.client_payload.base }}"
+      # - name: Create PR
+      #   uses: peter-evans/create-pull-request@v4
+      #   with:
+      #     token: ${{ secrets.ACCESS_TOKEN }}
+      #     branch: ${{ github.event.client_payload.branch }}
+      #     base: ${{ github.event.client_payload.base }}
