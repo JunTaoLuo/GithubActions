@@ -6,15 +6,10 @@ jobs:
   Update_PR:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.client_payload.branch }}
-          token: ${{ secrets.ACCESS_TOKEN }}
-          fetch-depth: 0
       - run: echo "merge ${{ github.event.client_payload.branch }} into ${{ github.event.client_payload.base }}"
-      # - name: Create PR
-      #   uses: peter-evans/create-pull-request@v4
-      #   with:
-      #     token: ${{ secrets.ACCESS_TOKEN }}
-      #     branch: ${{ github.event.client_payload.branch }}
-      #     base: ${{ github.event.client_payload.base }}
+      - name: Create PR
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          branch: ${{ github.event.client_payload.branch }}
+          base: ${{ github.event.client_payload.base }}
