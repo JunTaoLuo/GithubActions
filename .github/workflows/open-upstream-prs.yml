@@ -38,7 +38,7 @@ jobs:
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           repository: juntaoluo/GithubAction-Subrepo
-          event-type: update-pr-test
+          event-type: update-pr
           client-payload: |
             {
               "base": "${{ github.base_ref }}",
