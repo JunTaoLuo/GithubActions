@@ -31,7 +31,7 @@ jobs:
           git clone --depth=1 --branch=0.4.3 https://github.com/ingydotnet/git-subrepo.git /tmp/git-subrepo && \
           source /tmp/git-subrepo/.rc && \
           git subrepo fetch ${{ matrix.subdir }} && \
-          git subrepo push ${{ matrix.subdir }} -b ${{ github.ref_name }}
+          git subrepo push ${{ matrix.subdir }} -b ${{ github.head_ref }}
       - name: Dispatch PR
         if: steps.status.outputs.subdir_files_modified > 0
         uses: peter-evans/repository-dispatch@v2
@@ -41,6 +41,6 @@ jobs:
           event-type: update-pr
           client-payload: |
             {
-              "base": "${{ github.base_ref }}"
+              "base": "${{ github.base_ref }}",
               "branch": "${{ github.ref_name }}"
             }
