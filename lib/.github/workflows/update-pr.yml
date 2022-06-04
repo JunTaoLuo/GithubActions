@@ -13,8 +13,7 @@ jobs:
           fetch-depth: 0
       - run: echo "merge ${{ github.event.client_payload.branch }} into ${{ github.event.client_payload.base }}"
       - name: Create PR
-        uses: peter-evans/create-pull-request@v4
+        uses: repo-sync/pull-request@v2
         with:
-          token: ${{ secrets.ACCESS_TOKEN }}
-          branch: ${{ github.event.client_payload.branch }}-pr
-          base: ${{ github.event.client_payload.base }}
+          github_token: ${{ secrets.ACCESS_TOKEN }}
+          destination_branch: ${{ github.event.client_payload.base }}
