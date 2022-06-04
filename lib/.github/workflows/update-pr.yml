@@ -16,4 +16,5 @@ jobs:
         uses: repo-sync/pull-request@v2
         with:
           github_token: ${{ secrets.ACCESS_TOKEN }}
+          source_branch: ${{ github.event.client_payload.branch }}
           destination_branch: ${{ github.event.client_payload.base }}
