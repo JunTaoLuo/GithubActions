@@ -42,5 +42,5 @@ jobs:
           client-payload: |
             {
               "base": "${{ github.base_ref }}",
-              "branch": "${{ github.ref_name }}"
+              "branch": "${{ github.head_ref }}"
             }
