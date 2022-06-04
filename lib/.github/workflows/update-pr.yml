@@ -16,5 +16,5 @@ jobs:
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
-          branch: ${{ github.event.client_payload.branch }}
+          branch: ${{ github.event.client_payload.branch }}-pr
           base: ${{ github.event.client_payload.base }}
