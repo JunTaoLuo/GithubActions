@@ -7,7 +7,7 @@ on:
 
 jobs:
   Upstream-PR:
-    if: ! contains(github.event.pull_request.labels.*.name, 'automated')
+    if: contains(github.event.pull_request.labels.*.name, 'automated') == false
     strategy:
       matrix:
         subdir: ['lib']
