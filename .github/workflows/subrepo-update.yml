@@ -20,8 +20,16 @@ jobs:
           source /tmp/git-subrepo/.rc && \
           git subrepo pull lib -b ${{ github.event.client_payload.branch }}
       - name: Create PR
+        id: open_pr
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           branch: ci/update-subrepo
           base: ${{ github.event.client_payload.branch }}
+      - name: Automerge
+        uses: peter-evans/enable-pull-request-automerge@v2
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          pull-request-number: ${{ steps.status.open_pr.pull-request-number }}
+          continue-on-error: true
+
