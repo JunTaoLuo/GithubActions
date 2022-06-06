@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/JunTaoLuo/GithubAction-Subrepo.git
 	branch = dev
-	commit = 6f06dfdbf8fd94545f6e292d1f914f559d00ccf7
-	parent = a22039482c89675c5c3c8430eebbf54317f2cb70
+	commit = f7c827203db4e4e23d6afa3ac7ff09015b40877d
+	parent = 9dbb3a147fe053f740fe0cf6349e0bcd0cd67ec6
 	method = rebase
 	cmdver = 0.4.3
