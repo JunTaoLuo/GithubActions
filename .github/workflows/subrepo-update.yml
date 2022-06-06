@@ -26,10 +26,11 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           branch: ci/update-subrepo
           base: ${{ github.event.client_payload.branch }}
+          labels: automated
       - name: Automerge
         uses: peter-evans/enable-pull-request-automerge@v2
+        continue-on-error: true
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
-          pull-request-number: ${{ steps.status.open_pr.pull-request-number }}
-          continue-on-error: true
+          pull-request-number: ${{ steps.open_pr.outputs.pull-request-number }}
 
