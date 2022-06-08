@@ -1,28 +1,47 @@
 name: Open Upstream PR
 on:
   pull_request:
-    types:
-    - closed
     branches:
     - 'main'
     - 'dev'
 
 jobs:
-  Upstream-PR:
-    if: github.event.pull_request.merged == true && (join(github.event.pull_request.labels) == '' || contains(github.event.pull_request.labels.*.name, 'automated') == false)
+  Open-Upstream-PR:
+    if: join(github.event.pull_request.labels) == '' || contains(github.event.pull_request.labels.*.name, 'automated') == false
     strategy:
       matrix:
         subdir: ['lib']
     runs-on: ubuntu-20.04
     steps:
-      - name: Dispatch Merge PR
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+      - name: Resolve diff
+        id: status
+        run: |
+          echo ::set-output name=subdir_files_modified::$(git diff --dirstat=files,0 origin/${{ github.base_ref }}..${{ github.head_ref }} | grep " ${{ matrix.subdir }}/$" | wc -l)
+      - name: Push branch
+        if: steps.status.outputs.subdir_files_modified > 0
+        id: subrepo
+        run: |
+          export GITHUB_TOKEN=${{ secrets.ACCESS_TOKEN }} && \
+          git config --global user.name ${{ github.actor }} && \
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com" && \
+          git clone --depth=1 --branch=0.4.3 https://github.com/ingydotnet/git-subrepo.git /tmp/git-subrepo && \
+          source /tmp/git-subrepo/.rc && \
+          git subrepo fetch ${{ matrix.subdir }} && \
+          git subrepo push ${{ matrix.subdir }} -b ${{ github.head_ref }} -f
+      - name: Dispatch PR
+        if: steps.status.outputs.subdir_files_modified > 0
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           repository: juntaoluo/GithubAction-Subrepo
-          event-type: merge-pr
+          event-type: update-pr
           client-payload: |
             {
               "base": "${{ github.base_ref }}",
-              "branch": "${{ github.head_ref }}",
+              "branch": "${{ github.head_ref }}"
             }
