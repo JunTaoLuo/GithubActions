@@ -1,4 +1,4 @@
-name: Testing
+name: Open Upstream PR
 on:
   pull_request:
     branches:
@@ -6,7 +6,7 @@ on:
     - 'dev'
 
 jobs:
-  Upstream-PR:
+  Open-Upstream-PR:
     if: join(github.event.pull_request.labels) == '' || contains(github.event.pull_request.labels.*.name, 'automated') == false
     strategy:
       matrix:
@@ -21,7 +21,7 @@ jobs:
       - name: Resolve diff
         id: status
         run: |
-          echo ::set-output name=subdir_files_modified::$(git diff --dirstat=files,0 origin/${{ github.base_ref }}..${{ github.head_ref }} | grep " ${{ matrix.subdir }}/$" | wc -l)
+          echo ::set-output name=subdir_files_modified::$(git diff --dirstat=files,0 origin/${{ github.base_ref }}..${{ github.head_ref }} | grep " ${{ matrix.subdir }}/" | wc -l)
       - name: Push branch
         if: steps.status.outputs.subdir_files_modified > 0
         id: subrepo

@@ -1,0 +1,28 @@
+name: Merge Upstream PR
+on:
+  pull_request:
+    types:
+    - closed
+    branches:
+    - 'main'
+    - 'dev'
+
+jobs:
+  Merge-Upstream-PR:
+    if: github.event.pull_request.merged == true && (join(github.event.pull_request.labels) == '' || contains(github.event.pull_request.labels.*.name, 'automated') == false)
+    strategy:
+      matrix:
+        subdir: ['lib']
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Dispatch Merge PR
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          repository: juntaoluo/GithubAction-Subrepo
+          event-type: merge-pr
+          client-payload: |
+            {
+              "base": "${{ github.base_ref }}",
+              "branch": "${{ github.head_ref }}",
+            }
