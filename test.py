@@ -1,5 +1,5 @@
 from lib.hello import lib_func
 
-print("test v5-dev")
+print("test v6-dev")
 
 lib_func()
