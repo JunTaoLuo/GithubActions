@@ -1,0 +1,19 @@
+name: Merge PR
+on:
+  repository_dispatch:
+    types: [merge-pr]
+jobs:
+  Merge_PR:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Find PR
+        uses: juliangruber/find-pull-request-action@v1.6.0
+        id: find-pr
+        with:
+          branch: ${{ github.event.client_payload.branch }}
+          base: ${{ github.event.client_payload.base }}
+      - name: Merge PR
+        uses: juliangruber/merge-pull-request-action@v1.1.0
+        with:
+          github_token: ${{ secrets.ACCESS_TOKEN }}
+          number: ${{ steps.find-pr.outputs.number }}
