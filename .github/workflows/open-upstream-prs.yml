@@ -7,7 +7,6 @@ on:
 
 jobs:
   Open-Upstream-PR:
-    if: join(github.event.pull_request.labels) == '' || contains(github.event.pull_request.labels.*.name, 'automated') == false
     strategy:
       matrix:
         subdir: ['lib']
@@ -23,7 +22,7 @@ jobs:
         run: |
           echo ::set-output name=subdir_files_modified::$(git diff --dirstat=files,0 origin/${{ github.base_ref }}..${{ github.head_ref }} | grep " ${{ matrix.subdir }}/" | wc -l)
       - name: Push branch
-        if: steps.status.outputs.subdir_files_modified > 0
+        if: steps.status.outputs.subdir_files_modified > 0 && (join(github.event.pull_request.labels) == '' || contains(github.event.pull_request.labels.*.name, 'automated') == false)
         id: subrepo
         run: |
           export GITHUB_TOKEN=${{ secrets.ACCESS_TOKEN }} && \
@@ -34,7 +33,7 @@ jobs:
           git subrepo fetch ${{ matrix.subdir }} && \
           git subrepo push ${{ matrix.subdir }} -b ${{ github.head_ref }} -f
       - name: Dispatch PR
-        if: steps.status.outputs.subdir_files_modified > 0
+        if: steps.status.outputs.subdir_files_modified > 0 && (join(github.event.pull_request.labels) == '' || contains(github.event.pull_request.labels.*.name, 'automated') == false)
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
