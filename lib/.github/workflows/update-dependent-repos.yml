@@ -27,10 +27,11 @@ jobs:
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           repository: ${{ matrix.repo }}
-          event-type: update-subrepo-event
+          event-type: dependency-on-update-event
           client-payload: |
             {
-              "source": "GithubAction-Subrepo",
+              "commit": "${{ github.sha }}",
+              "dependency": "lib",
               "branch": "${{ github.event.inputs.branch }}"
             }
       - name: Dispatch update
@@ -39,9 +40,10 @@ jobs:
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           repository: ${{ matrix.repo }}
-          event-type: update-subrepo-event
+          event-type: dependency-on-update-event
           client-payload: |
             {
-              "source": "GithubAction-Subrepo",
+              "commit": "${{ github.sha }}",
+              "dependency": "lib",
               "branch": "${{ github.ref_name }}"
             }
