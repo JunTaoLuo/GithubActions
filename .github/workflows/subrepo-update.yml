@@ -1,37 +1,43 @@
-name: Subrepo Update
+name: Dependency Update
 on:
   repository_dispatch:
-    types: [update-subrepo-event]
+    types: [dependency-on-update-event]
 jobs:
   Update_Subrepo:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3
+      - name: Update Event Payload
+        run: echo "Updating dependency - ${{ github.event.client_payload.dependency }}[${{ github.event.client_payload.branch }}]@${{ github.event.client_payload.commit }}"
+      - name: Checkout Target Branch
+        uses: actions/checkout@v3
         with:
           ref: ${{ github.event.client_payload.branch }}
           token: ${{ secrets.ACCESS_TOKEN }}
           fetch-depth: 0
-      - name: Pull update
+      - name: Pull Update
         run: |
           export GITHUB_TOKEN=${{ secrets.ACCESS_TOKEN }} && \
-          git config --global user.name ${{ github.actor }} && \
-          git config --global user.email "${{ github.actor }}@users.noreply.github.com" && \
+          git config --global user.name ci && \
+          git config --global user.email ci@test.com && \
           git clone --depth=1 --branch=0.4.3 https://github.com/ingydotnet/git-subrepo.git /tmp/git-subrepo && \
           source /tmp/git-subrepo/.rc && \
-          git subrepo pull lib -b ${{ github.event.client_payload.branch }}
-      - name: Create PR
-        id: open_pr
+          git subrepo pull ${{ github.event.client_payload.branch }} -b ${{ github.event.client_payload.branch }} -m "Automated dependency update from ${{ github.event.client_payload.dependency }}[${{ github.event.client_payload.branch }}]@${{ github.event.client_payload.commit }}"
+      - name: Create Pull Request
+        id: pr
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
-          branch: ci/update-subrepo
+          branch: ci/update-${{ github.event.client_payload.dependency }}-${{ github.event.client_payload.branch }}
           base: ${{ github.event.client_payload.branch }}
           labels: automated
-      - name: Automerge
+          author: ci <ci@test.com>
+          title: Automated dependency update from ${{ github.event.client_payload.dependency }}[${{ github.event.client_payload.branch }}]
+          body: Automated updates by ci, for issues and concerns contact devops
+      - name: Enable Automerge
         uses: peter-evans/enable-pull-request-automerge@v2
         continue-on-error: true
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
-          pull-request-number: ${{ steps.open_pr.outputs.pull-request-number }}
+          pull-request-number: ${{ steps.pr.outputs.pull-request-number }}
           merge-method: squash
 
