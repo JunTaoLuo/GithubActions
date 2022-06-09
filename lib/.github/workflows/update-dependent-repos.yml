@@ -30,7 +30,7 @@ jobs:
           event-type: dependency-on-update-event
           client-payload: |
             {
-              "commit": ${{ github.sha }},
+              "commit": "${{ github.sha }}",
               "dependency": "lib",
               "branch": "${{ github.event.inputs.branch }}"
             }
@@ -43,7 +43,7 @@ jobs:
           event-type: dependency-on-update-event
           client-payload: |
             {
-              "commit": ${{ github.sha }},
+              "commit": "${{ github.sha }}",
               "dependency": "lib",
               "branch": "${{ github.ref_name }}"
             }
