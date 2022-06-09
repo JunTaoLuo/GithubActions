@@ -21,7 +21,7 @@ jobs:
           git config --global user.email ci@test.com && \
           git clone --depth=1 --branch=0.4.3 https://github.com/ingydotnet/git-subrepo.git /tmp/git-subrepo && \
           source /tmp/git-subrepo/.rc && \
-          git subrepo pull ${{ github.event.client_payload.branch }} -b ${{ github.event.client_payload.branch }} -m "Automated dependency update from ${{ github.event.client_payload.dependency }}[${{ github.event.client_payload.branch }}]@${{ github.event.client_payload.commit }}"
+          git subrepo pull ${{ github.event.client_payload.dependency }} -b ${{ github.event.client_payload.branch }} -m "Automated dependency update from ${{ github.event.client_payload.dependency }}[${{ github.event.client_payload.branch }}]@${{ github.event.client_payload.commit }}"
       - name: Create Pull Request
         id: pr
         uses: peter-evans/create-pull-request@v4
