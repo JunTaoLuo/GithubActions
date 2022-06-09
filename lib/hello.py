@@ -1,3 +1,3 @@
 def lib_func():
-    print("hello v17-dev")
+    print("hello v18-dev")
 
